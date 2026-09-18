@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ru">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <meta content="Self-hosted engineering platform for startups: project workflow, Git, CI/CD, communication and infrastructure on your own server." name="description"/>
+  <title>
+   Tothemooner — Effective Workflow Platform
+  </title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <style>
+   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root {
+    --hex-side: 100px;
+    --hex-width: calc(var(--hex-side) * 2);
+    --hex-height: calc(var(--hex-side) * 1.7320508);
+    --hex-column-width: calc(var(--hex-side) * 1.5);
+    --hex-column-offset: calc(var(--hex-side) * 0.8660254);
+
+    --bg:#0b0b0d;
+    --panel:#121216;
+    --panel2:#18181e;
+    --text:#f4f1ed;
+    --muted:#a6a3a0;
+    --line:#29292f;
+    --orange:#ff6a22;
+    --orange2:rgb(255, 141, 77);
+    --green:#79d69b;
+    --radius:20px;
+    --max:1180px
+}
+* {
+    box-sizing:border-box
+}
+html {
+    scroll-behavior:smooth
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+canvas.webgl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    linear-gradient(rgba(20, 18, 15, 0.06), rgba(0, 0, 0, 0.68) 33%,rgba(20, 18, 15, 0.06));
+}
+a {
+    color:inherit;
+    text-decoration:none
+}
+.wrap {
+    width:min(var(--max),calc(100% - 40px));
+    margin:auto
+}
+
+header.wrap {
+    border-bottom: solid 1px;
+    border-bottom-color: var(--orange2);
+}
+.nav {
+    height:78px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #ffffff08
+}
+.brand {
+    display:flex;
+    align-items: end;
+    justify-content: end;
+    font-weight:800;
+}
+.logo {
+    width:34px;
+    height:34px;
+    
+    
+    background:#000;
+    display:grid;
+    place-items:center;
+    box-shadow:0 8px 35px #ff6a2230
+}
+.logo:after {
+    content: "🚀";
+    border-radius: 10px;
+    border-color: var(--orange);
+    border-style: solid;
+    font-size: 21px;
+    padding: 4px;
+    font-weight: 800;
+    border-width: thin;
+    color: #16100c;
+}
+.links {
+    display:flex;
+    gap:27px;
+    color:var(--muted);
+    font-size:13px
+}
+.links a:hover {
+    color:#fff
+}
+.nav-actions {
+    display:flex;
+    gap:8px;
+    align-items:center
+}
+.lang {
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:3px
+}
+.lang button {
+    border:0;
+    background:none;
+    color:var(--muted);
+    padding:6px 8px;
+    border-radius:6px;
+    cursor:pointer
+}
+.lang .active {
+    background:#fff;
+    color:#111
+}
+.mini-cta {
+    padding:9px 13px;
+    border:1px solid #ff6a2255;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:700;
+    color:#ffb28b
+}
+.hero {
+    padding:104px 0 72px
+}
+.eyebrow {
+    display:inline-flex;
+    gap:9px;
+    align-items:center;
+    border:1px solid #ff6a2240;
+    background:#ff6a2210;
+    padding:7px 11px;
+    border-radius:99px;
+    color:#ffb28c;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase
+}
+.dot {
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 14px #79d69b99;
+    animation:pulse 2s infinite
+}
+@keyframes pulse {
+    50% {
+        box-shadow:0 0 3px #79d69b33;
+        transform:scale(.75)
+    }
+}
+h1 {
+    font-size:clamp(52px,8vw,92px);
+    line-height:.92;
+    max-width:980px;
+    margin:25px 0 23px
+}
+h1 .accent {
+    color:var(--orange)
+}
+h1 .green {
+    color:var(--green)
+}
+.hero-copy {
+    max-width:730px;
+    color:var(--muted);
+    font-size:18px;
+    line-height:1.7
+}
+.actions {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:29px 0
+}
+.btn {
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    border-radius:11px;
+    padding:13px 18px;
+    font-size:13px;
+    font-weight:800;
+    transition:.2s
+}
+.primary {
+    background:var(--orange);
+    color:#180d08;
+    box-shadow:0 14px 45px #ff6a2225
+}
+.primary:hover {
+    transform:translateY(-2px);
+    background:var(--orange2)
+}
+.secondary {
+    background:#ffffff06;
+    border:1px solid var(--line)
+}
+.secondary:hover {
+    background:#ffffff0c
+}
+.proof {
+    margin-top:52px;
+    border:1px solid var(--line);
+    border-radius:24px;
+    background:#ffffff04;
+    box-shadow:0 40px 120px #0009;
+    overflow:hidden;
+    transform:perspective(1400px) rotateX(1deg)
+}
+.proof-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 17px;
+    border-bottom:1px solid var(--line);
+    font-size:11px;
+    color:#777
+}
+.dots {
+    display:flex;
+    gap:6px
+}
+.dots i {
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#34343a
+}
+.proof img {
+    display:block;
+    width:100%;
+    height:auto;
+    filter:saturate(.9) contrast(1.02)
+}
+.caption {
+    padding:12px 17px;
+    color:#777;
+    font-size:11px;
+    border-top:1px solid var(--line)
+}
+section {
+    padding:105px 0
+}
+.kicker {
+    color:var(--orange);
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase
+}
+h2 {
+    font-size:clamp(36px,5vw,61px);
+    line-height:.98;
+    margin:10px 0 17px;
+    max-width:800px
+}
+.lead {
+    max-width:720px;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.75
+}
+.grid3 {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin-top:42px
+}
+.card {
+    background:linear-gradient(145deg,#ffffff08,#ffffff02);
+    border:1px solid var(--line);
+    border-radius:17px;
+    padding:26px;
+    transition:.25s;
+    position:relative;
+    overflow:hidden
+}
+.card:after {
+    content:"";
+    position:absolute;
+    width:130px;
+    height:130px;
+    right:-80px;
+    top:-80px;
+    border-radius:50%;
+    background:#ff6a2214;
+    transition:.35s
+}
+.card:hover {
+    transform:translateY(-5px);
+    border-color:#ffffff1c
+}
+.card:hover:after {
+    transform:scale(2)
+}
+.icon {
+    width:39px;
+    height:39px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    background:#ff6a2212;
+    color:var(--orange);
+    font-weight:800;
+    margin-bottom:20px
+}
+.card h3 {
+    margin:0 0 8px;
+    font-size:16px
+}
+.card p {
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7
+}
+.compare {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:42px
+}
+.compare article {
+    padding:29px;
+    border-radius:18px;
+    border:1px solid var(--line);
+    background:#ffffff03
+}
+.compare article:last-child {
+    border-color:#ff6a2250;
+    background:linear-gradient(145deg,#ff6a2210,#ffffff03)
+}
+.compare h3 {
+    margin:0 0 20px;
+    font-size:18px
+}
+.tag {
+    display:inline-block;
+    padding:4px 7px;
+    border-radius:6px;
+    background:#ffffff08;
+    color:#aaa;
+    font-size:10px;
+    margin:0 5px 6px 0
+}
+.tag.good {
+    color:#a6e9bb;
+    background:#79d69b12
+}
+.compare ul {
+    padding:0;
+    margin:0;
+    list-style:none;
+    color:var(--muted);
+    font-size:13px
+}
+.compare li {
+    margin:11px 0
+}
+.compare li:before {
+    content:"→";
+    color:var(--orange);
+    margin-right:9px
+}
+.compare .goodline:before {
+    color:var(--green)
+}
+.workflow-wrap {
+    margin-top:43px
+}
+.flow {
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:7px;
+    position:relative
+}
+.flow:before {
+    content:"";
+    position:absolute;
+    left:4%;
+    right:4%;
+    top:43px;
+    height:1px;
+    background:linear-gradient(90deg,#ff6a22,#79d69b);
+    opacity:.35
+}
+.step {
+    position:relative;
+    z-index:1;
+    padding:19px 10px;
+    border:1px solid var(--line);
+    background:#121216;
+    border-radius:14px;
+    text-align:center
+}
+.step b {
+    display:block;
+    font-size:9px;
+    color:var(--orange);
+    margin-bottom:6px
+}
+.step strong {
+    font-size:12px
+}
+.step:last-child b {
+    color:var(--green)
+}
+.split {
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:65px;
+    align-items:center
+}
+.code {
+    border:1px solid var(--line);
+    background:#08080a;
+    border-radius:18px;
+    padding:23px;
+    box-shadow:0 35px 90px #0008;
+    font:12px/2 ui-monospace,SFMono-Regular,Consolas,monospace;
+    color:#bbb
+}
+.code .o {
+    color:var(--orange2)
+}
+.code .g {
+    color:var(--green)
+}
+.code .d {
+    color:#706c68
+}
+.code .w {
+    color:#eee
+}
+.deploy {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin-top:42px
+}
+.deploy .card {
+    min-height:185px
+}
+.num {
+    font:800 10px ui-monospace,monospace;
+    color:var(--orange)
+}
+.price-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin-top:42px
+}
+.price-card {
+    padding:29px;
+    border-radius:19px;
+    border:1px solid var(--line);
+    background:#ffffff03
+}
+.price-card.featured {
+    border-color:#ff6a2260;
+    background:linear-gradient(145deg,#ff6a2212,#ffffff03);
+    box-shadow:0 25px 90px #0006
+}
+.price {
+    font-size:46px;
+    font-weight:800;
+    margin:11px 0 4px
+}
+.price small {
+    font-size:12px;
+    color:var(--muted);
+    font-weight:500
+}
+.price-desc {
+    height:64px;
+    color:var(--muted);
+    font-size:13px
+}
+.price-card ul {
+    list-style:none;
+    padding:0;
+    color:#c8c3bf;
+    font-size:12px
+}
+.price-card li {
+    margin:9px 0
+}
+.price-card li:before {
+    content:"✓";
+    color:var(--green);
+    margin-right:8px
+}
+.cta {
+    padding:72px 30px;
+    border-radius:25px;
+    border:1px solid #ff6a2235;
+    background:radial-gradient(circle at 20% 20%,#ff6a2215,transparent 38%),radial-gradient(circle at 80% 80%,#79d69b0d,transparent 40%),#ffffff03;
+    text-align:center
+}
+.cta h2 {
+    margin:10px auto 16px
+}
+.cta p {
+    max-width:620px;
+    margin:0 auto 27px;
+    color:var(--muted)
+}
+footer {
+    border-top:1px solid var(--line);
+    padding:30px 0 45px;
+    color:#696660;
+    font-size:11px;
+    display:flex;
+    justify-content:space-between
+}
+.reveal {
+    opacity:0;
+    transform:translateY(22px);
+    transition:.7s ease
+}
+.reveal.visible {
+    opacity:1;
+    transform:none
+}
+@media(max-width:900px) {
+    .links {
+        display:none
+    }
+    .grid3,.deploy,.price-grid,.compare,.split {
+        grid-template-columns:1fr
+    }
+    .flow {
+        grid-template-columns:repeat(2,1fr)
+    }
+    .flow:before {
+        display:none
+    }
+    .hero {
+        padding-top:70px
+    }
+}
+@media(max-width:560px) {
+    .wrap {
+        width:calc(100% - 28px)
+    }
+    .nav {
+        height:66px
+    }
+    .mini-cta {
+        display:none
+    }
+    .hero {
+        padding:60px 0 45px
+    }
+    h1 {
+        font-size:51px
+    }
+    .hero-copy {
+        font-size:16px
+    }
+    section {
+        padding:75px 0
+    }
+    .price {
+        font-size:42px
+    }
+    .price-desc {
+        height:auto;
+        margin-bottom:18px
+    }
+    footer {
+        display:block
+    }
+    footer div+div {
+        margin-top:7px
+    }
+}
+  
+/* Honeycomb background */
+.honeycomb-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.145;
+    animation: honeyColor 48s linear infinite;
+}
+
+.honeycomb {
+    position: absolute;
+    top: calc(var(--hex-height) * -1);
+    left: calc(var(--hex-side) * -1);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.honeycomb-column {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 var(--hex-column-width);
+    width: var(--hex-column-width);
+    min-width: var(--hex-column-width);
+}
+
+.honeycomb-column:nth-child(even) {
+    transform: translateY(var(--hex-column-offset));
+}
+
+.hex {
+    flex: 0 0 var(--hex-height);
+    width: var(--hex-width);
+    height: var(--hex-height);
+    margin-left: calc(var(--hex-side) * -0.25);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='173.205' viewBox='0 0 200 173.205'%3E%3Cpolygon points='50,0 150,0 200,86.6025 150,173.205 50,173.205 0,86.6025' fill='none' stroke='%23d7a34a' stroke-width='0.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+@keyframes honeyColor {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(55deg);
+    }
+
+    100% {
+        filter: hue-rotate(110deg);
+    }
+}
+</style>
+ </head>
+ <body>
+  <canvas class="webgl"></canvas>
+  <header class="wrap">
+   <nav class="nav">
+    <a class="brand" href="#">
+     <span class="logo">
+     </span>
+     <span>
+      tothemooner 
+     </span>
+    </a>
+    <div class="links">
+     <a data-en="Why CE" data-ru="Почему CE" href="#why">
+     </a>
+     <a data-en="Workflow" data-ru="Workflow" href="#workflow">
+     </a>
+     <a data-en="Platform" data-ru="Платформа" href="#platform">
+     </a>
+     <a data-en="Pricing" data-ru="Стоимость" href="#pricing">
+     </a>
+    </div>
+    <div class="nav-actions">
+     <div class="lang">
+      <button data-lang="ru">
+       RU
+      </button>
+      <button data-lang="en">
+       EN
+      </button>
+     </div>
+     <a class="mini-cta" data-en="Discuss project" data-ru="Обсудить проект" href="#contact">
+     </a>
+    </div>
+   </nav>
+  </header>
+  <main>
+   <section class="hero wrap">
+    <div class="eyebrow">
+     <span class="dot">
+     </span>
+     <span data-en="Self-hosted engineering platform" data-ru="Self-hosted engineering platform">
+     </span>
+    </div>
+    <h1 data-en="Don't buy &lt;span class='accent'&gt;Enterprise&lt;/span&gt;.&lt;br&gt;Design the &lt;span class='green'&gt;workflow&lt;/span&gt;." data-ru="Не покупайте &lt;span class='accent'&gt;Enterprise&lt;/span&gt;.&lt;br&gt;Организуйте &lt;span class='green'&gt;workflow&lt;/span&gt;.">
+    </h1>
+    <p class="hero-copy" data-en="A ready engineering environment for startups: projects, teams and tasks + Git, CI/CD, communication and infrastructure. GitLab CE is not treated as a crippled GitLab, but as the foundation of a deliberately designed workflow." data-ru="Готовая инженерная среда для стартапа: управление проектами, командами и задачами + Git, CI/CD, коммуникации и инфраструктура. GitLab CE используется не как «урезанный GitLab», а как основа правильно организованного workflow.">
+    </p>
+    <div class="actions">
+     <a class="btn primary" data-en="Launch from 15,000 ₽ →" data-ru="Запустить от 15 000 ₽ →" href="#pricing">
+     </a>
+     <a class="btn secondary" data-en="See the workflow" data-ru="Посмотреть workflow" href="#workflow">
+     </a>
+    </div>
+    <div class="proof reveal">
+     <div class="proof-top">
+      <div class="dots">
+       <i>
+       </i>
+       <i>
+       </i>
+       <i>
+       </i>
+      </div>
+      <span>
+       real workflow / GitLab CE
+      </span>
+     </div>
+     <!-- <img alt="Пример реального workflow в GitLab" src="Screenshot_3.png"/> -->
+     <div class="caption" data-en="One issue can have multiple assignees, appear in different workflow views and remain a single source of work." data-ru="Одна задача может иметь нескольких исполнителей, участвовать в разных представлениях workflow и оставаться одной сущностью.">
+     </div>
+    </div>
+   </section>
+   <section id="why">
+    <div class="wrap">
+     <div class="kicker" data-en="The core idea" data-ru="Главная идея">
+     </div>
+     <h2 data-en="CE limitations don't have to become workflow limitations." data-ru="Ограничения CE — не обязательно ограничения workflow.">
+     </h2>
+     <p class="lead" data-en="Instead of buying Enterprise features, we use GitLab's structure: labels, nested groups, boards, milestones and projects. One dataset — multiple useful views for the team." data-ru="Вместо покупки Enterprise-функций мы используем структуру GitLab: labels, nested groups, boards, milestones и projects. Один набор данных — несколько полезных представлений для команды.">
+     </p>
+     <div class="compare reveal">
+      <article>
+       <h3>
+        Enterprise-first
+       </h3>
+       <span class="tag">
+        feature
+       </span>
+       <span class="tag">
+        license
+       </span>
+       <span class="tag">
+        more features
+       </span>
+       <ul>
+        <li>
+         Функция решает организационную задачу.
+        </li>
+        <li>
+         Workflow подстраивается под возможности тарифа.
+        </li>
+        <li>
+         Рост команды увеличивает стоимость лицензирования.
+        </li>
+       </ul>
+      </article>
+      <article>
+       <h3>
+        Workflow-first
+       </h3>
+       <span class="tag good">
+        structure
+       </span>
+       <span class="tag good">
+        CE
+       </span>
+       <span class="tag good">
+        no license tax
+       </span>
+       <ul>
+        <li class="goodline">
+         Сначала проектируем способ работы команды.
+        </li>
+        <li class="goodline">
+         Затем используем CE там, где его возможностей достаточно.
+        </li>
+        <li class="goodline">
+         Ограничения компенсируем организацией данных и представлений.
+        </li>
+       </ul>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section id="workflow">
+    <div class="wrap">
+     <div class="kicker" data-en="How it works" data-ru="Как это работает">
+     </div>
+     <h2 data-en="One issue. Multiple dimensions." data-ru="Одна задача. Несколько измерений.">
+     </h2>
+     <p class="lead" data-en="Assignee, team, sprint, roadmap stage and status don't require duplicate tasks. They become metadata and views of one workflow." data-ru="Исполнитель, команда, sprint, этап roadmap и статус не требуют отдельных копий задачи. Они становятся метаданными и представлениями одного workflow.">
+     </p>
+     <div class="workflow-wrap reveal">
+      <div class="flow">
+       <div class="step">
+        <b>
+         01
+        </b>
+        <strong>
+         ROADMAP
+        </strong>
+       </div>
+       <div class="step">
+        <b>
+         02
+        </b>
+        <strong>
+         SPRINT
+        </strong>
+       </div>
+       <div class="step">
+        <b>
+         03
+        </b>
+        <strong>
+         TEAM / ASSIGNEE
+        </strong>
+       </div>
+       <div class="step">
+        <b>
+         04
+        </b>
+        <strong>
+         DEVELOPMENT
+        </strong>
+       </div>
+       <div class="step">
+        <b>
+         05
+        </b>
+        <strong>
+         REVIEW
+        </strong>
+       </div>
+       <div class="step">
+        <b>
+         06
+        </b>
+        <strong>
+         DONE
+        </strong>
+       </div>
+      </div>
+     </div>
+     <div class="split" style="margin-top:60px">
+      <div>
+       <div class="kicker">
+        DATA MODEL
+       </div>
+       <h2 data-en="Labels instead of unnecessary complexity." data-ru="Labels вместо лишней сложности." style="font-size:39px">
+       </h2>
+       <p class="lead" data-en="Multiple assignees on one issue. Sprints through labels. Teams through subgroups and labels. Status through boards. Milestones represent major roadmap stages. Different boards give the team different projections of the same work." data-ru="Несколько исполнителей на одной Issue. Sprint через label. Team — через subgroup и labels. Status — через board. Milestones — крупные этапы roadmap. Разные boards дают команде разные проекции одной работы.">
+       </p>
+      </div>
+      <div class="code">
+       <div class="d">
+        # issue: Implement payment flow
+       </div>
+       <div>
+        <span class="o">
+         team:
+        </span>
+        backend
+       </div>
+       <div>
+        <span class="o">
+         sprint:
+        </span>
+        sprint-12
+       </div>
+       <div>
+        <span class="o">
+         status:
+        </span>
+        in-progress
+       </div>
+       <div>
+        <span class="o">
+         role:
+        </span>
+        frontend · backend · review
+       </div>
+       <div>
+        <span class="g">
+         milestone:
+        </span>
+        MVP / Payments
+       </div>
+       <div class="d">
+        → same issue / different boards / one workflow
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section id="platform">
+    <div class="wrap">
+     <div class="kicker" data-en="What the team gets" data-ru="Что получает команда">
+     </div>
+     <h2 data-en="The project is at the center. Tools surround it." data-ru="Проект — в центре. Инструменты — вокруг него.">
+     </h2>
+     <p class="lead" data-en="Git and CI/CD are only parts of the engineering environment. The platform connects work management, code, delivery, communication and operations." data-ru="Git и CI/CD — только часть инженерной среды. Платформа связывает управление работой, код, delivery, коммуникации и эксплуатацию.">
+     </p>
+     <div class="grid3 reveal">
+      <article class="card">
+       <div class="icon">
+        01
+       </div>
+       <h3 data-en="Project Management" data-ru="Project Management">
+       </h3>
+       <p data-en="Issues, milestones, roadmap, sprints, boards and one coherent team workflow." data-ru="Issues, milestones, roadmap, sprints, boards и единая модель работы команды.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="icon">
+        02
+       </div>
+       <h3>
+        Git + Code Review
+       </h3>
+       <p data-en="Repositories, merge requests and change control on your own infrastructure." data-ru="Репозитории, merge requests и контроль изменений в собственной инфраструктуре.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="icon">
+        03
+       </div>
+       <h3>
+        CI / CD
+       </h3>
+       <p data-en="Build, test and deployment through GitLab Runner." data-ru="Сборка, тестирование и deployment через GitLab Runner.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="icon">
+        04
+       </div>
+       <h3 data-en="Communication" data-ru="Коммуникация">
+       </h3>
+       <p data-en="Private team communication through Matrix without SaaS dependency." data-ru="Приватная командная коммуникация через Matrix без зависимости от SaaS.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="icon">
+        05
+       </div>
+       <h3 data-en="Infrastructure" data-ru="Infrastructure">
+       </h3>
+       <p data-en="Your VPS, your data, backup, TLS, reverse proxy and operational documentation." data-ru="Ваш VPS, ваши данные, backup, TLS, reverse proxy и эксплуатационная документация.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="icon">
+        06
+       </div>
+       <h3 data-en="Team onboarding" data-ru="Командный onboarding">
+       </h3>
+       <p data-en="After deployment, the team learns the real workflow on its own project." data-ru="После deployment команда получает обучение на собственном реальном workflow.">
+       </p>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section>
+    <div class="wrap">
+     <div class="kicker" data-en="Deployment" data-ru="Запуск">
+     </div>
+     <h2 data-en="From an empty VPS to a working engineering environment." data-ru="Из пустого VPS — в рабочую инженерную среду.">
+     </h2>
+     <div class="deploy reveal">
+      <article class="card">
+       <div class="num">
+        01 / DESIGN
+       </div>
+       <h3 data-en="Design the workflow" data-ru="Спроектировать workflow">
+       </h3>
+       <p data-en="Teams, projects, roles, boards, labels and working rules." data-ru="Команды, проекты, роли, boards, labels и правила работы.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="num">
+        02 / DEPLOY
+       </div>
+       <h3 data-en="Deploy" data-ru="Развернуть">
+       </h3>
+       <p data-en="GitLab CE, Runner, Matrix, TLS, reverse proxy, backup." data-ru="GitLab CE, Runner, Matrix, TLS, reverse proxy, backup.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="num">
+        03 / CONFIGURE
+       </div>
+       <h3 data-en="Configure" data-ru="Настроить">
+       </h3>
+       <p data-en="Groups, projects, boards, labels, milestones and integrations." data-ru="Группы, проекты, доски, labels, milestones и интеграции.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="num">
+        04 / TRAIN
+       </div>
+       <h3 data-en="Train" data-ru="Обучить">
+       </h3>
+       <p data-en="Show the team the real path from roadmap to done." data-ru="Показываем команде реальный путь задачи от roadmap до done.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="num">
+        05 / HANDOVER
+       </div>
+       <h3 data-en="Hand over control" data-ru="Передать контроль">
+       </h3>
+       <p data-en="Access, documentation and operational knowledge stay with the client." data-ru="Доступы, документация и знания остаются у клиента.">
+       </p>
+      </article>
+      <article class="card">
+       <div class="num">
+        06 / SUPPORT
+       </div>
+       <h3 data-en="Extend" data-ru="Развивать">
+       </h3>
+       <p data-en="Support, new teams, services and integrations without rebuilding the foundation." data-ru="Поддержка, новые команды, сервисы и интеграции — без перестройки фундамента.">
+       </p>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section id="pricing">
+    <div class="wrap">
+     <div class="kicker" data-en="Pricing" data-ru="Стоимость">
+     </div>
+     <h2 data-en="Pay for the launch. Not for every developer." data-ru="Платите за запуск. Не за каждого разработчика.">
+     </h2>
+     <p class="lead" data-en="The client provides the VPS. We turn it into a working engineering platform and hand control back to the team." data-ru="Клиент предоставляет VPS. Мы превращаем его в рабочую инженерную платформу и передаём контроль команде.">
+     </p>
+     <div class="price-grid reveal">
+      <article class="price-card">
+       <div class="kicker">
+        START
+       </div>
+       <div class="price">
+        15 000 ₽
+        <small>
+         от
+        </small>
+       </div>
+       <p class="price-desc" data-en="A basic engineering environment for a small team." data-ru="Базовая инженерная среда для небольшой команды.">
+       </p>
+       <ul>
+        <li>
+         GitLab CE
+        </li>
+        <li>
+         Groups / Projects
+        </li>
+        <li>
+         Issues / Boards / Labels
+        </li>
+        <li>
+         Milestones / workflow
+        </li>
+        <li>
+         CI/CD + Runner
+        </li>
+        <li>
+         Документация
+        </li>
+       </ul>
+       <a class="btn secondary" data-en="Discuss" data-ru="Обсудить" href="#contact">
+       </a>
+      </article>
+      <article class="price-card featured">
+       <div class="kicker">
+        TEAM
+       </div>
+       <div class="price">
+        25 000 ₽
+        <small>
+         от
+        </small>
+       </div>
+       <p class="price-desc" data-en="A complete startup workflow with communication and operations." data-ru="Полный startup workflow с коммуникацией и эксплуатацией.">
+       </p>
+       <ul>
+        <li>
+         Всё из Start
+        </li>
+        <li>
+         Matrix
+        </li>
+        <li>
+         TLS / reverse proxy
+        </li>
+        <li>
+         Backup
+        </li>
+        <li>
+         Командное обучение
+        </li>
+        <li>
+         Настройка workflow под проект
+        </li>
+       </ul>
+       <a class="btn primary" data-en="Launch →" data-ru="Запустить →" href="#contact">
+       </a>
+      </article>
+      <article class="price-card">
+       <div class="kicker">
+        CUSTOM
+       </div>
+       <div class="price">
+        🧮
+        <small>
+         под задачу
+        </small>
+       </div>
+       <p class="price-desc" data-en="Migration, staging/production, monitoring, SSO, integrations and ongoing support." data-ru="Миграция, staging/production, мониторинг, SSO, интеграции и сопровождение.">
+       </p>
+       <ul>
+        <li>
+         Архитектура
+        </li>
+        <li>
+         Migration
+        </li>
+        <li>
+         Monitoring
+        </li>
+        <li>
+         Disaster recovery
+        </li>
+        <li>
+         Integrations
+        </li>
+        <li>
+         Ongoing support
+        </li>
+       </ul>
+       <a class="btn secondary" data-en="Discuss" data-ru="Обсудить" href="#contact">
+       </a>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section id="contact">
+    <div class="wrap">
+     <div class="cta reveal">
+      <div class="kicker">
+       tothemooner
+      </div>
+      <h2 
+        data-en="Give the team a working environment, not a pile of services." 
+        data-ru="Дайте команде рабочую среду, а не набор сервисов.">
+      </h2>
+      <p 
+        data-en="Tell us about the project, team size and VPS — we'll turn it into a ready workflow." 
+        data-ru="Опишите проект, размер команды и VPS — остальное обсудим и соберём в готовый workflow.">
+      </p>
+      <div>
+        <a 
+        class="btn primary" 
+        data-en="@ Mail >" 
+        data-ru="@ Почта >" 
+        href="mailto:fiberliber.coder@gmail.com?subject=Workflow%20platform"></a>
+      </div><br>
+      
+        <a 
+        class="btn primary" 
+        data-en="Telegram >" 
+        data-ru="Телеграмм >" 
+        href="https://t.me/anarchomeritokrat">
+      
+      </a>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="wrap">
+   <div>
+    © 2026 tothemooner.github.io
+   </div>
+   <div>
+    Self-hosted · Open technologies · Your control
+   </div>
+  </footer>
+  <script type="module">
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+    const root = document.querySelector(".webgl");
+    const renderer = new THREE.WebGLRenderer({canvas: root, antialias: true, alpha: true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, .1, 100);
+    // camera.position.set(0, 1.3, 10);
+    
+
+    scene.add(new THREE.AmbientLight(0xffe8d5, 2));
+    const key = new THREE.DirectionalLight(0xffffff, 3);
+    key.position.set(4, 7, 8);
+    key.castShadow = true;
+    scene.add(key);
+
+    const world = new THREE.Group();
+    scene.add(world);
+    world.position.y = 100;
+
+    const particles = new THREE.BufferGeometry();
+    const pp = [];
+    for (let i = 0; i < 80000; i++) {
+      pp.push((Math.random()-.5)*300, (Math.random()-.5)*300, (Math.random()-.5)*300);
+    }
+    particles.setAttribute("position", new THREE.Float32BufferAttribute(pp, 3));
+
+    function createCircleAlphaMap(size = 64) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+
+      const ctx = canvas.getContext('2d');
+      const center = size / 2;
+
+      // Радиальный градиент: белый в центре → прозрачный по краям
+      const gradient = ctx.createRadialGradient(center, center, 0, center, center, size / 2);
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    }
+
+    const alphaMap = createCircleAlphaMap(64); // 64 — хороший баланс чёткости и памяти
+
+
+    const particleMesh = new THREE.Points(
+      particles,
+      new THREE.PointsMaterial({
+        color: 0xffffff, 
+        size: .025, 
+        transparent: true, 
+        opacity: 1,
+        alphaMap
+      })
+    );
+    world.add(particleMesh);
+
+    const pointer = {x:0, y:0};
+    document.addEventListener("mousemove", e => {
+      pointer.x = (e.clientX / innerWidth - .5);
+      pointer.y = (e.clientY / innerHeight - .5);
+    });
+
+    function frame() {
+      requestAnimationFrame(frame);
+      const t = performance.now() * .001;
+    //   particleMesh.rotation.x += .0003;
+      world.rotation.x -= .001;
+      world.rotation.y += pointer.x * .001;
+      renderer.render(scene, camera);
+    }
+    frame();
+    function resizeCanvas() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const dpr = window.devicePixelRatio;
+
+        root.width = width * dpr;
+        root.height = height * dpr;
+
+        root.style.width = `${width}px`;
+        root.style.height = `${height}px`;
+
+        renderer.setSize(width, height, false);
+        renderer.setPixelRatio(dpr);
+
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        
+        console.log('resize')
+
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+  </script>
+  <script>
+    const buttons = document.querySelectorAll('.lang button');
+    let lang = localStorage.getItem('lang')||(
+      (navigator.language||'ru').toLowerCase().startsWith('ru')?'ru':'en'
+    );
+    function apply(){
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-ru]').forEach( el => {
+        el.innerHTML = el.dataset[lang]||el.dataset.ru
+      });
+      buttons.forEach( b => b.classList.toggle('active', b.dataset.lang === lang));
+      localStorage.setItem('lang',lang)
+    }
+    buttons.forEach( b => b.onclick = () => {
+      lang=b.dataset.lang;apply()
+    });
+    apply();
+    const io = new IntersectionObserver( 
+      es => es.forEach( e => {
+        if(e.isIntersecting) e.target.classList.add('visible')
+      }),
+      {threshold:.12}
+    );
+    document.querySelectorAll('.reveal').forEach( e => io.observe(e));
+  </script>
+ </body>
+</html>
